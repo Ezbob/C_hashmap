@@ -30,15 +30,15 @@ HM_HASHMAP *HM_initialize_hashmap(size_t hash_size) {
 	return new_map;
 }
 
-size_t HM_getHashSize(HM_HASHMAP *map) {
+size_t HM_get_hash_size(HM_HASHMAP *map) {
 	return  map->hash_size;
 }
 
-size_t HM_getChainSize(HM_HASHMAP *map, char *key) {
+size_t HM_get_chain_size(HM_HASHMAP *map, char *key) {
 	return map->entries[HM_hash(map,key)]->chain_size;
 }
 
-void *HM_getValue(HM_HASHMAP *map, char *key) {
+void *HM_get_value(HM_HASHMAP *map, char *key) {
 	HM_ENTRY *entry = map->entries[HM_hash(map,key)]; 
 	for (int i = 0; i < entry->chain_size; ++i) {
 		if ( entry->key == key ) {
@@ -49,11 +49,11 @@ void *HM_getValue(HM_HASHMAP *map, char *key) {
 	return NULL;
 }
 
-void HM_putValue(HM_HASHMAP *map, void *value) {
+void HM_put_value(HM_HASHMAP *map, void *value) {
 
 }
 
-void HM_removeValue(HM_HASHMAP *map, char *key) {
+void HM_remove_value(HM_HASHMAP *map, char *key) {
 
 }
 
