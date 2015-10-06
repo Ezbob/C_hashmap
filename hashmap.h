@@ -43,7 +43,7 @@ void *HM_getValue(HM_HASHMAP *, char *key);
 /*
  * add to hash table
  */
-void HM_putValue(HM_HASHMAP *, void *value);
+void *HM_putValue(HM_HASHMAP *,char *key, void *value);
 
 /*
  * remove from hash table

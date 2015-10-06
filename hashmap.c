@@ -1,6 +1,9 @@
 #include "hashmap.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+
+#define ERROR(msg) fprintf(stderr,msg "\n")
 
 unsigned int HM_hash(HM_HASHMAP *map, char *key) {
 	unsigned int i;
@@ -49,8 +52,33 @@ void *HM_get_value(HM_HASHMAP *map, char *key) {
 	return NULL;
 }
 
-void HM_put_value(HM_HASHMAP *map, void *value) {
-
+void *HM_put_value(HM_HASHMAP *map, char *key, void *value) {
+	HM_ENTRY *entry = map->entries[HM_hash(map, key)];
+	HM_ENTRY *new_entry = malloc(sizeof(HM_ENTRY));
+	
+	if ( new_entry == NULL ) {
+		ERROR("Memory error: Cannot allocate new entry");
+		return NULL;
+	}
+	new_entry->key = key;
+	new_entry->value = value;
+	
+	if ( entry == NULL ) {
+		map->entries[HM_hash(map, key)] = new_entry;
+		return new_entry;
+	} else {
+		HM_ENTRY *iterator = entry;
+		while ( iterator->next != NULL ) {
+			if ( strcmp(entry->key, key) == 0 ) {
+				free(new_entry);
+				ERROR("Key error: Duplicate entrý keys");
+				return NULL;
+			} 
+			iterator = iterator->next;
+		}
+		iterator->next = new_entry;
+		return new_entry;
+	}
 }
 
 void HM_remove_value(HM_HASHMAP *map, char *key) {
