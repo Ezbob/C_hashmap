@@ -51,8 +51,13 @@ void *HM_putValue(HM_HASHMAP *,char *key, void *value);
 void HM_removeValue(HM_HASHMAP *, char *key);
 
 /*
+ * remove key-value pair from hash table and free it using the supplied destructor
+ */
+void HM_destroyValue(HM_HASHMAP *, char *key, void *(destructer)( void *value ) );
+
+/*
  * remove allocated heap memory for hashmap
  */
-void HM_destroy_hashmap(HM_HASHMAP *);
+void HM_destroyHashmap(HM_HASHMAP *);
 
 #endif
