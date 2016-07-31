@@ -1,6 +1,5 @@
 CC = gcc
 CFLAGS = -std=c99 -Wall -Wextra -Wpedantic
-DEBUGFLAGS = -g
 
 # Modules within source directory and test directory
 MODULES = hashmap
@@ -11,36 +10,37 @@ BUILD_PREFIX = build/
 SOURCE_PREFIX = src/
 TEST_PREFIX = tests/
 
-EXEC = map
-TEST_EXEC = test_map
+BIN_PATH = $(addprefix $(BUILD_PREFIX), bin/)
 
+# "default" package
+EXEC = map
+EXEC_PATH = $(addprefix $(BIN_PATH), $(EXEC))
 SRC_DIR = $(addprefix $(SOURCE_PREFIX), $(MODULES))
 BUILD_DIR = $(addprefix $(BUILD_PREFIX), $(MODULES))
-
-TEST_SRC_DIR = $(addprefix $(TEST_PREFIX), $(TEST_MODULES))
-TEST_DIR = $(addprefix $(BUILD_PREFIX), $(TEST_MODULES))
-
-# Make now knows our source folders
-VPATH = $(SRC_DIR) $(TEST_SRC_DIR) 
-
 # Finds all sources files in the source tree (absolute paths)
 SRC = $(foreach sdir, $(SRC_DIR), $(wildcard $(sdir)/*.c)) 
 # Simple substitution for all object files (absolute paths)
 OBJ = $(patsubst $(SOURCE_PREFIX)%.c, $(BUILD_PREFIX)%.o, $(SRC))
 
+# test package
+TEST_EXEC = test_map
+TEXEC_PATH = $(addprefix $(BIN_PATH), $(TEST_EXEC))
+TEST_SRC_DIR = $(addprefix $(TEST_PREFIX), $(TEST_MODULES))
+TEST_DIR = $(addprefix $(BUILD_PREFIX), $(TEST_MODULES))
 T_SRC = $(foreach tdir, $(TEST_SRC_DIR), $(wildcard $(tdir)/*.c))
 T_OBJ = $(patsubst $(TEST_PREFIX)%.c, $(BUILD_PREFIX)%.o, $(T_SRC))
 
-BIN_PATH = $(addprefix $(BUILD_PREFIX), bin/)
+# Make now knows our source folders
+VPATH = $(SRC_DIR) $(TEST_SRC_DIR) 
 
-EXEC_PATH = $(addprefix $(BIN_PATH), $(EXEC))
-TEXEC_PATH = $(addprefix $(BIN_PATH), $(TEST_EXEC))
-
-.PHONY: all test checkdirs testcheckdirs clean
+.PHONY: all test checkdirs testcheckdirs clean run_tests
 
 all: checkdirs $(EXEC_PATH)
 
 tests: testcheckdirs $(TEXEC_PATH)
+
+run_tests: tests
+	exec $(TEXEC_PATH)
 
 $(EXEC_PATH): $(OBJ)
 	$(CC) $(CFLAGS) $^ -o $@
