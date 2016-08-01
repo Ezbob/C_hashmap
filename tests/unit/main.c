@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "testtest.h"
 
+void RunAllTests( void );
 
 void RunAllTests( void ) {
 	CuString *output = CuStringNew();

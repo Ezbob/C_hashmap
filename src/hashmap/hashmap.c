@@ -153,5 +153,5 @@ int HM_destroyValue(HM_HASHMAP *map, char *key, void *value, void *(*destructer)
 }
 
 void HM_destroyHashmap( HM_HASHMAP *map ) {
-
+	
 }

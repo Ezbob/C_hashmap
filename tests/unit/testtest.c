@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include "CuTest.h"
 #include "testtest.h"
+#include "hashmap.h"
 
 char *StrToUpper(char **str) {
 

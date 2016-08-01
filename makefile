@@ -10,6 +10,7 @@ TEST_MODULES = unit
 BUILD_PREFIX = build/
 SOURCE_PREFIX = src/
 TEST_PREFIX = tests/
+INCLUDE_PREFIX = include/
 
 BIN_PATH = $(addprefix $(BUILD_PREFIX), bin/)
 
@@ -44,10 +45,10 @@ run_tests: tests
 	exec $(TEXEC_PATH)
 
 $(EXEC_PATH): $(OBJ)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) -iquote$(INCLUDE_PREFIX) $(CFLAGS) $^ -o $@
 
 $(TEXEC_PATH): $(OBJ) $(T_OBJ)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) -iquote$(INCLUDE_PREFIX) $(CFLAGS) $^ -o $@
 
 # creates the build file subtree
 testcheckdirs: checkdirs $(TEST_DIR)
@@ -66,7 +67,7 @@ GEN_C_RULES = $(BUILD_DIR) $(TEST_DIR)
 
 define make-c-goal 
 $1/%.o: %.c
-	$(CC) $(CFLAGS) -c $$< -o $$@
+	$(CC) -iquote$(INCLUDE_PREFIX) $(CFLAGS) -c $$< -o $$@
 endef
 
 define make-dirs
