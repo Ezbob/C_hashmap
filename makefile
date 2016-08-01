@@ -1,3 +1,26 @@
+########
+#
+# Makefile that finds C-source files and generates compilation rules for
+# use with the GCC compiler.
+#
+# This makefile relies a specific source tree organization created by the user:
+#	- SOURCE_PREFIX: this director contains the different MODULES directories which in turn 
+# contains the .c source files for the project
+#	- TEST_PREFIX: contains the TEST_MODULES directories which contains the .c source files for 
+# the project's tests
+#	- INCLUDES_PREFIX: contains headers for the projects 
+# 
+# Using this source tree organization the following phony targets are availiable:
+# 	- all: Default target. Compiles code in SOURCE_PREFIX and creates the EXEC exectutable in
+# the BUILD_PREFIX folder under the "bin/" folder
+#	- tests: Compiles the test code and creates the TEST_EXEC executable in
+# the BUILD_PREFIX folder under the "bin/" folder
+#	- run_tests: Relies on the "tests" target and then executes the TEST_EXEC
+#	- clean: removes the BUILD_PREFIX
+#	- testcheckdirs: Creates the directory tree for the compilation output from compiling the tests
+#	- checkdirs: Creates the directory tree for the compilation output from compiling the EXEC executable
+#
+########
 CC = gcc
 CFLAGS = -std=c99 -Wall -Wextra -Wpedantic -Wshadow -Wpointer-arith -Wcast-qual \
         -Wstrict-prototypes -Wmissing-prototypes

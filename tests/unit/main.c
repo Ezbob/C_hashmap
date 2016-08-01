@@ -7,7 +7,7 @@ void RunAllTests( void ) {
 	CuString *output = CuStringNew();
 	CuSuite *suite = CuSuiteNew();
 
-	CuSuiteAddSuite( suite, testtestGetSuite() );
+	//CuSuiteAddSuite( suite, testtestGetSuite() );
 
 	CuSuiteRun( suite );
 	CuSuiteSummary( suite, output );
