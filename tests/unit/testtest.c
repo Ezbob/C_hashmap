@@ -1,13 +1,21 @@
+#define _DEFAULT_SOURCE
 #include <string.h>
+#include <ctype.h>
 #include "CuTest.h"
+#include "testtest.h"
 
 char *StrToUpper(char **str) {
-	return str;
+
+	for ( int i = 0; (*str)[i] != '\0'; ++i ) {
+		(*str)[i] = toupper( (*str)[i] );
+	}
+
+	return *str;
 }
 
 void Test_StrToUpper(CuTest *tc) {
 	char *input = strdup("Hello world");
-	char *actual = StrToUpper(input);
+	char *actual = StrToUpper(&input);
 	char *expected = "HELLO WORLD";
 
 	CuAssertStrEquals(tc, expected, actual);

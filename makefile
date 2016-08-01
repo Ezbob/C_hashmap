@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -std=c99 -Wall -Wextra -Wpedantic
+CFLAGS = -std=c99 -Wall -Wextra -Wpedantic -Wshadow -Wpointer-arith -Wcast-qual \
+        -Wstrict-prototypes -Wmissing-prototypes
 
 # Modules within source directory and test directory
 MODULES = hashmap

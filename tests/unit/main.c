@@ -1,7 +1,24 @@
+#include <stdio.h>
+#include "testtest.h"
 
 
-int main(int argc, char const *argv[])
-{
-	/* code */
+void RunAllTests( void ) {
+	CuString *output = CuStringNew();
+	CuSuite *suite = CuSuiteNew();
+
+	CuSuiteAddSuite( suite, testtestGetSuite() );
+
+	CuSuiteRun( suite );
+	CuSuiteSummary( suite, output );
+	CuSuiteDetails( suite, output );
+
+	puts( output->buffer );
+
+	CuSuiteDelete( suite );
+	CuStringDelete( output );
+}
+
+int main( void ) {
+	RunAllTests();
 	return 0;
 }
