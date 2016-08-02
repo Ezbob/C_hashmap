@@ -74,6 +74,6 @@ int HM_destroyValue(HM_HASHMAP *, char *key, void *value, void *(*destructer)( v
 /*
  * remove allocated heap memory for hashmap
  */
-void HM_destroyHashmap(HM_HASHMAP *);
+void HM_destroyHashmap(HM_HASHMAP **);
 
 #endif

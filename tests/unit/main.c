@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "testtest.h"
+#include "CuTest.h"
+#include "testheader.h"
 
 void RunAllTests( void );
 
@@ -7,7 +8,7 @@ void RunAllTests( void ) {
 	CuString *output = CuStringNew();
 	CuSuite *suite = CuSuiteNew();
 
-	//CuSuiteAddSuite( suite, testtestGetSuite() );
+	CuSuiteAddSuite(suite, getHashmapTestSuite() );
 
 	CuSuiteRun( suite );
 	CuSuiteSummary( suite, output );

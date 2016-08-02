@@ -22,7 +22,7 @@
 #
 ########
 CC = gcc
-CFLAGS = -std=c99 -Wall -Wextra -Wpedantic -Wshadow -Wpointer-arith -Wcast-qual \
+CFLAGS = -g -std=c99 -Wall -Wextra -Wpedantic -Wshadow -Wpointer-arith -Wcast-qual \
         -Wstrict-prototypes -Wmissing-prototypes
 
 # Modules within source directory and test directory

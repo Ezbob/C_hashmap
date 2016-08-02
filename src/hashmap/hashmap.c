@@ -80,6 +80,8 @@ HM_HASHMAP *HM_initialize_hashmap( size_t hash_size ) {
 	new_map->hash_size = hash_size;
 	new_map->entries_used = 0;
 
+	new_map->entries = malloc( hash_size * sizeof( HM_ENTRY * ) );
+
 	for ( i = 0; i < hash_size; ++i ) {
 		new_map->entries[i] = NULL;
 	}
@@ -152,6 +154,31 @@ int HM_destroyValue(HM_HASHMAP *map, char *key, void *value, void *(*destructer)
 	return 0;
 }
 
-void HM_destroyHashmap( HM_HASHMAP *map ) {
-	
+void HM_destroyHashmap( HM_HASHMAP **map ) {
+
+	HM_HASHMAP *real_map = *map;
+
+	for ( size_t i = 0; i < real_map->hash_size; ++i ) {
+		if ( real_map->entries[i] != NULL ) {
+			HM_ENTRY *current_entr = real_map->entries[i];
+			
+			HM_VALUE *curr_val = current_entr->value;
+			HM_VALUE *next = curr_val->next;
+
+			if ( curr_val != NULL ) {
+				HM_deleteValue( curr_val );
+			}
+
+			while ( next != NULL ) {
+				curr_val = next;
+				next = next->next;
+
+				HM_deleteValue( curr_val );
+			}				
+			HM_deleteEntry(current_entr);
+		}
+	}
+
+	free(real_map->entries);
+	free(real_map);
 }
