@@ -98,7 +98,7 @@ size_t HM_getHashSize( HM_HASHMAP *map ) {
 }
 
 HM_VALUE *HM_getValue( HM_HASHMAP *map, char *key ) {
-	HM_ENTRY *entry = HM_LOOKUP( map, key ); 
+	HM_ENTRY *entry = HM_LOOKUP( map, key );
 	return entry->value;
 }
 
@@ -150,8 +150,25 @@ void *HM_poll( HM_HASHMAP *map, char *key ) {
 	return result;
 }
 
-int HM_destroyValue(HM_HASHMAP *map, char *key, void *value, void *(*destructer)( void *value ) ) {
-	return 0;
+int HM_dropBucket(HM_HASHMAP *map, char *key) {
+	HM_ENTRY *current_entr = HM_LOOKUP(map, key);
+
+	if ( current_entr == NULL ) {
+		return 0;
+	}
+
+	HM_VALUE *curr_val = current_entr->value;
+	HM_VALUE *next = curr_val->next;
+
+	while ( next != NULL ) {
+		curr_val = next;
+		next = next->next;
+
+		HM_deleteValue( curr_val );
+	}				
+	HM_deleteEntry( current_entr );
+
+	return 1;
 }
 
 void HM_destroyHashmap( HM_HASHMAP **map ) {
@@ -160,14 +177,9 @@ void HM_destroyHashmap( HM_HASHMAP **map ) {
 
 	for ( size_t i = 0; i < real_map->hash_size; ++i ) {
 		if ( real_map->entries[i] != NULL ) {
-			HM_ENTRY *current_entr = real_map->entries[i];
 			
-			HM_VALUE *curr_val = current_entr->value;
+			HM_VALUE *curr_val = real_map->entries[i]->value;
 			HM_VALUE *next = curr_val->next;
-
-			if ( curr_val != NULL ) {
-				HM_deleteValue( curr_val );
-			}
 
 			while ( next != NULL ) {
 				curr_val = next;
@@ -175,7 +187,7 @@ void HM_destroyHashmap( HM_HASHMAP **map ) {
 
 				HM_deleteValue( curr_val );
 			}				
-			HM_deleteEntry(current_entr);
+			HM_deleteEntry( real_map->entries[i] );
 		}
 	}
 

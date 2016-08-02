@@ -57,19 +57,9 @@ void HM_putValue(HM_HASHMAP *, char *key, void *value);
 void *HM_poll(HM_HASHMAP *, char *key);
 
 /*
- * Removes a specific value from hash table.
- */
-int HM_removeValue(HM_HASHMAP *, char *key, void *value);
-
-/*
  * Empties the whole bucket. The values contained  
  */
-int HM_emptyBucket(HM_HASHMAP *, char *key);
-
-/*
- * remove key-value pair from hash table and free it using the supplied destructor
- */
-int HM_destroyValue(HM_HASHMAP *, char *key, void *value, void *(*destructer)( void *value ) );
+int HM_dropBucket(HM_HASHMAP *, char *key);
 
 /*
  * remove allocated heap memory for hashmap
