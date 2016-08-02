@@ -131,12 +131,11 @@ void test_mapDropBucket(CuTest *tc) {
 	CuAssertTrue(tc, new_map->entries_used == 1);
 	CuAssertTrue(tc, HM_getChainLength(new_map, "Hello world") == 3);
 
-	/*int wasDropped = HM_dropBucket(new_map, "Hello world");
+	int wasDropped = HM_dropBucket(new_map, "Hello world");
 
 	CuAssertTrue(tc, wasDropped);
 	CuAssertTrue(tc, new_map->entries_used == 0);
-	//CuAssertTrue(tc, HM_getValue(new_map, "Hello world") == NULL );
-*/
+	CuAssertTrue(tc, HM_getValue(new_map, "Hello world") == NULL);
 	HM_destroyHashmap( &new_map );
 	free(key);
 }

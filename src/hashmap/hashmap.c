@@ -99,7 +99,8 @@ size_t HM_getHashSize( HM_HASHMAP *map ) {
 
 HM_VALUE *HM_getValue( HM_HASHMAP *map, char *key ) {
 	HM_ENTRY *entry = HM_LOOKUP( map, key );
-	return entry->value;
+
+	return entry == NULL ? NULL : entry->value;
 }
 
 void HM_putValue( HM_HASHMAP *map, char *key, void *value ) {
@@ -142,6 +143,7 @@ void *HM_poll( HM_HASHMAP *map, char *key ) {
 
 		if ( entry->chain_length == 0 ) {
 			HM_deleteEntry(entry);
+			
 			HM_LOOKUP(map, key) = NULL;
 			map->entries_used--;
 		}
@@ -167,6 +169,9 @@ int HM_dropBucket(HM_HASHMAP *map, char *key) {
 		HM_deleteValue( curr_val );
 	}				
 	HM_deleteEntry( current_entr );
+
+	HM_LOOKUP(map, key) = NULL;
+	map->entries_used--;
 
 	return 1;
 }
