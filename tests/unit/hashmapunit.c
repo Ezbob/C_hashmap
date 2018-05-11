@@ -13,6 +13,7 @@ void test_mapAddCollision(CuTest *tc);
 void test_mapAddGet(CuTest *tc);
 void test_mapPollCollision(CuTest *tc);
 void test_mapDropBucket(CuTest *tc);
+void test_copyHashMap(CuTest *tc);
 
 void test_mapInit(CuTest *tc) {
 
@@ -140,6 +141,40 @@ void test_mapDropBucket(CuTest *tc) {
 	free(key);
 }
 
+void test_copyHashMap(CuTest *tc) {
+
+	HM_HASHMAP *new_map = HM_initialize_hashmap(HASHMAP_SIZE);
+
+	char *key = strdup("Hello world");
+	int values[] = { 42, 37, 65, 1 };
+
+	HM_putValue(new_map, key, ( (void *) &values[0] ) );
+	HM_putValue(new_map, key, ( (void *) &values[1] ) );
+	HM_putValue(new_map, key, ( (void *) &values[2] ) );
+	HM_putValue(new_map, key, ( (void *) &values[3] ) );
+
+	CuAssertPtrNotNull(tc, new_map);
+	CuAssertTrue(tc, new_map->entries_used == 1);
+	CuAssertTrue(tc, HM_getChainLength(new_map, "Hello world") == 4);
+
+        HM_HASHMAP *copy_map = HM_copyHashmap(new_map);
+
+	CuAssertPtrNotNull(tc, copy_map);
+	CuAssertTrue(tc, copy_map->entries_used == 1);
+	CuAssertTrue(tc, HM_getChainLength(copy_map, "Hello world") == 4);
+
+	CuAssertTrue(tc, *( ( int *) HM_poll(copy_map, key) ) == values[0] );
+	CuAssertTrue(tc, *( ( int *) HM_poll(copy_map, key) ) == values[1] );
+	CuAssertTrue(tc, *( ( int *) HM_poll(copy_map, key) ) == values[2] );
+	CuAssertTrue(tc, *( ( int *) HM_poll(copy_map, key) ) == values[3] );
+
+	CuAssertTrue(tc, copy_map->entries_used == 0);
+
+	HM_destroyHashmap(&copy_map);
+	HM_destroyHashmap(&new_map);
+        free(key);
+}
+
 CuSuite *getHashmapTestSuite( void ) {
 	CuSuite *newSuite = CuSuiteNew();
 
@@ -149,6 +184,7 @@ CuSuite *getHashmapTestSuite( void ) {
 	SUITE_ADD_TEST(newSuite, test_mapAddGet);
 	SUITE_ADD_TEST(newSuite, test_mapPollCollision);
 	SUITE_ADD_TEST(newSuite, test_mapDropBucket);
+        SUITE_ADD_TEST(newSuite, test_copyHashMap);
 
 	return newSuite;
 }

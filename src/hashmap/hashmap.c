@@ -8,6 +8,8 @@ static void HM_deleteValue( HM_VALUE *value);
 static unsigned int HM_hash( size_t hash_size, char *key );
 static HM_ENTRY *HM_newEntry( char *key, HM_VALUE *value );
 static void HM_deleteEntry( HM_ENTRY *entry );
+static HM_ENTRY *HM_copyEntry(HM_ENTRY *);
+static HM_VALUE *HM_copyValue(HM_VALUE *);
 
 #define HM_ERROR( msg ) fprintf( stderr, msg "\n" )
 #define HM_LOOKUP( map, key ) ( map->entries[ HM_hash( HM_getHashSize( map ), key ) ] )
@@ -199,3 +201,49 @@ void HM_destroyHashmap( HM_HASHMAP **map ) {
 	free(real_map->entries);
 	free(real_map);
 }
+
+/*
+ * Copying the value chain, but we does not copy the actually values 
+ */
+static HM_VALUE *HM_copyValue(HM_VALUE *v) {    
+    HM_VALUE *prev = HM_newValue(v->value, NULL);
+    HM_VALUE *cur = NULL;
+    HM_VALUE *iter = v->next;
+    HM_VALUE *head = prev;
+
+    while ( iter != NULL ) {
+        cur = HM_newValue(iter->value, NULL);
+        prev->next = cur;
+        prev = cur;
+        iter = iter->next;
+    }
+    return head;
+}
+
+static HM_ENTRY *HM_copyEntry(HM_ENTRY *e) {
+
+    char *key = calloc(strlen(e->key) + 1, sizeof(char));
+    strcpy(key, e->key);
+    HM_VALUE *val_copies = HM_copyValue(e->value);
+
+    HM_ENTRY *new = HM_newEntry(key, val_copies);
+
+    new->chain_length = e->chain_length;
+    return new;
+}
+
+HM_HASHMAP *HM_copyHashmap(HM_HASHMAP *map) {
+
+    HM_HASHMAP *new = HM_initialize_hashmap(map->hash_size);
+
+    new->entries_used = map->entries_used;
+
+    for (size_t i = 0; i < map->hash_size; ++i) {
+        if ( map->entries[i] != NULL ) {
+            new->entries[i] = HM_copyEntry(map->entries[i]);
+        }
+    }
+
+    return new;
+}
+

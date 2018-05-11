@@ -66,4 +66,9 @@ int HM_dropBucket(HM_HASHMAP *, char *key);
  */
 void HM_destroyHashmap(HM_HASHMAP **);
 
+/*
+ * copy a hashmap
+ */
+HM_HASHMAP *HM_copyHashmap(HM_HASHMAP *);
+
 #endif
